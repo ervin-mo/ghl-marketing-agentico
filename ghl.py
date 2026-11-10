@@ -16,12 +16,58 @@ import argparse, csv, datetime as dt, getpass, hashlib, json, mimetypes, os, re,
     time, uuid
 import urllib.error, urllib.parse, urllib.request
 
-VERSION = "1.3.0"
+VERSION = "1.3.1"
 BASE = "https://services.leadconnectorhq.com"
 ADP = BASE + "/ad-publishing/facebook"
 V_SOCIAL = "2021-07-28"      # Social Planner, medios, blogs, correos, enlaces, usuarios, subcuenta
 V_ADS = "v3"                 # Ad Manager (anuncios)
-DIR = os.environ.get("GHL_MARKETING_DIR") or os.path.join(os.path.expanduser("~"), ".config", "ghl-marketing")
+AQUI = os.path.dirname(os.path.abspath(__file__))
+
+
+def _escribible(d):
+    """True si de verdad se puede escribir ahí (los sandbox de los agentes dicen que sí y luego niegan)."""
+    try:
+        os.makedirs(d, exist_ok=True)
+        prueba = os.path.join(d, f".prueba-{os.getpid()}")
+        with open(prueba, "w") as h:
+            h.write("ok")
+        os.remove(prueba)
+        return True
+    except OSError:
+        return False
+
+
+def _dir_datos():
+    """Dónde viven subcuentas, PIT (si no hay Llavero), perfil, fichas y metas.
+    1) GHL_MARKETING_DIR · 2) .ghl-datos/ dentro de esta carpeta, si ya existe · 3) ~/.config/ghl-marketing si se puede
+    escribir · 4) si no (un agente en sandbox, como Codex, que solo deja escribir en la carpeta del proyecto),
+    .ghl-datos/ dentro de esta carpeta, copiando lo que ya hubiera en ~/.config/ghl-marketing."""
+    if os.environ.get("GHL_MARKETING_DIR"):
+        return os.environ["GHL_MARKETING_DIR"]
+    local = os.path.join(AQUI, ".ghl-datos")
+    casa = os.path.join(os.path.expanduser("~"), ".config", "ghl-marketing")
+    if os.path.isdir(local):
+        return local
+    if _escribible(casa):
+        return casa
+    try:
+        os.makedirs(local, exist_ok=True)
+        if os.path.isdir(casa):
+            for x in os.listdir(casa):
+                if x in ("respaldos", "actualizacion.json"):
+                    continue
+                src, dst = os.path.join(casa, x), os.path.join(local, x)
+                (shutil.copytree if os.path.isdir(src) else shutil.copy2)(src, dst)
+        try:
+            os.chmod(local, stat.S_IRWXU)
+        except OSError:
+            pass
+    except OSError:
+        pass
+    return local
+
+
+DIR = _dir_datos()
 CUENTAS = os.path.join(DIR, "cuentas.json")
 BITACORA = os.path.join(DIR, "bitacora.jsonl")
 CAMPANAS = os.path.join(DIR, "campanas")
@@ -93,11 +139,15 @@ def leer_texto(args, campo="texto"):
 
 
 def guardar_json(ruta, data):
-    os.makedirs(os.path.dirname(ruta), exist_ok=True)
     tmp = ruta + ".tmp"
-    with open(tmp, "w", encoding="utf-8") as h:
-        json.dump(data, h, ensure_ascii=False, indent=1)
-    os.replace(tmp, ruta)
+    try:
+        os.makedirs(os.path.dirname(ruta), exist_ok=True)
+        with open(tmp, "w", encoding="utf-8") as h:
+            json.dump(data, h, ensure_ascii=False, indent=1)
+        os.replace(tmp, ruta)
+    except PermissionError:
+        raise Alto(f"No tengo permiso para guardar en {os.path.dirname(ruta)}. Si esto lo corre un agente en sandbox, "
+                   "pídele que lo vuelva a correr con permisos elevados, o corre el comando en tu terminal.")
     try:
         os.chmod(ruta, stat.S_IRUSR | stat.S_IWUSR)
         os.chmod(os.path.dirname(ruta), stat.S_IRWXU)
@@ -106,10 +156,13 @@ def guardar_json(ruta, data):
 
 
 def bitacora(evento, **kw):
-    os.makedirs(DIR, exist_ok=True)
-    with open(BITACORA, "a", encoding="utf-8") as h:
-        h.write(json.dumps({"ts": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
-                            "evento": evento, **kw}, ensure_ascii=False) + "\n")
+    try:
+        os.makedirs(DIR, exist_ok=True)
+        with open(BITACORA, "a", encoding="utf-8") as h:
+            h.write(json.dumps({"ts": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
+                                "evento": evento, **kw}, ensure_ascii=False) + "\n")
+    except OSError:
+        print("⚠️  No pude anotar en la bitácora (sin permiso de escritura).", file=sys.stderr)
 
 
 def huella(*partes):
@@ -217,7 +270,8 @@ def con_pit(alias, datos):
     if not d.get("pit"):
         d["pit"] = llavero_leer(alias)
         if not d["pit"]:
-            die(f"No encuentro el PIT de «{alias}» en el Llavero. Vuelve a conectarla: python3 ghl.py conectar")
+            die(f"No encuentro el PIT de «{alias}» en el Llavero (o tu agente no tiene permiso de leerlo). Vuelve a "
+                "conectarla desde aquí mismo: python3 ghl.py conectar")
     return d
 
 
@@ -298,6 +352,12 @@ class Ghl:
         return {"url": r["url"], "fileId": r.get("fileId"), "type": ct}
 
 
+SIN_RED = ("Sin internet en este entorno. Si la computadora sí tiene internet, el que no tiene es TU AGENTE (su sandbox "
+           "bloquea la red; pasa con Codex). Agente: vuelve a correr este mismo comando pidiendo permisos elevados / fuera "
+           "del sandbox, con la justificación «ghl.py necesita internet para hablar con la API de GoHighLevel», y dile a la "
+           "persona que lo apruebe. Detalle: AGENTS.md → «Si eres Codex». Persona: prueba el mismo comando en tu terminal.")
+
+
 def explica(s, r, path=""):
     """Traduce los errores de GHL a qué hacer."""
     r = oculto(r)
@@ -326,7 +386,7 @@ def explica(s, r, path=""):
     elif s == 429:
         pista = "Demasiadas llamadas: espera unos minutos y repite."
     elif s == 0:
-        pista = "Sin internet o GHL no respondió."
+        pista = SIN_RED
     return f"HTTP {s} en {path}: {msg}" + (f"\n   → {pista}" if pista else "")
 
 
@@ -2724,9 +2784,8 @@ def cmd_api(a):
 # ───────────────────────────── ACTUALIZAR ─────────────────────────────
 REPO = "ervin-mo/ghl-marketing-agentico"
 URL_VERSION = os.environ.get("GHL_VERSION_URL") or f"https://raw.githubusercontent.com/{REPO}/main/version.json"
-AQUI = os.path.dirname(os.path.abspath(__file__))
 REVISION = os.path.join(DIR, "actualizacion.json")
-NO_TOCAR = ("informes/", "exportes/", ".git/")
+NO_TOCAR = ("informes/", "exportes/", ".git/", ".ghl-datos/")
 
 
 def _vt(v):
@@ -2741,7 +2800,7 @@ def ultima_version(timeout=8):
         with urllib.request.urlopen(req, timeout=timeout) as r:
             d = json.loads(r.read().decode())
     except Exception as e:
-        raise Alto(f"No pude revisar si hay versión nueva ({type(e).__name__}). ¿Hay internet?")
+        raise Alto(f"No pude revisar si hay versión nueva ({type(e).__name__}).\n   → " + SIN_RED)
     if not d.get("version") or not d.get("zip"):
         raise Alto("El aviso de versión publicado está incompleto.")
     return d
@@ -2763,7 +2822,10 @@ def revisar_version(forzar=False, horas=24):
         fresca = False
     if forzar or not fresca or not cache.get("ultima"):
         cache = {"revisado": ahora.isoformat(timespec="seconds"), "ultima": ultima_version()}
-        guardar_json(REVISION, cache)
+        try:
+            guardar_json(REVISION, cache)
+        except OSError:
+            pass
     u = cache["ultima"]
     return u if _vt(u["version"]) > _vt(VERSION) else None
 

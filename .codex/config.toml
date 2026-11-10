@@ -1,0 +1,6 @@
+# Configuración de Codex SOLO para esta carpeta.
+# ghl.py necesita internet para hablar con la API de GoHighLevel; el modo normal de Codex (workspace-write)
+# bloquea la red. Esto la abre solo aquí, sin dar más permisos. Codex la lee si confías en esta carpeta
+# (cuando Codex pregunte si confías en el proyecto, di que sí).
+[sandbox_workspace_write]
+network_access = true

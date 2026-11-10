@@ -4,6 +4,11 @@ set -e
 cd "$(dirname "$0")/.."
 V=$(python3 -c "import re;print(re.search(r'VERSION = \"([^\"]+)\"', open('ghl.py').read()).group(1))")
 N=ghl-marketing-agentico
+# .agents/skills es copia de .claude/skills (en Windows git no crea enlaces simbólicos): deben ser iguales
+if ! diff -rq .claude/skills .agents/skills >/dev/null; then
+  rsync -a --delete .claude/skills/ .agents/skills/
+  echo "⛔ .agents/skills estaba desactualizada: ya la sincronicé. Commitea el cambio y vuelve a correr."; exit 1
+fi
 rm -rf dist && mkdir -p dist/$N
 git ls-files -z | xargs -0 -I{} rsync -aR {} dist/$N/
 rm -rf dist/$N/scripts dist/$N/version.json

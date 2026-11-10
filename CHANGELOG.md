@@ -1,5 +1,17 @@
 # Cambios
 
+## 1.3.1 — 10-nov-2026
+- **Funciona en Codex, también en Windows.** El sandbox normal de Codex bloquea internet y no deja escribir fuera de la
+  carpeta del proyecto; por eso `ghl.py` fallaba con `getaddrinfo failed`.
+  - La carpeta trae `.codex/config.toml`, que abre la red solo para este proyecto. Codex lo lee si confías en la carpeta.
+  - Si el agente aun así no tiene red, la herramienta se lo dice con un mensaje claro: que vuelva a correr el comando
+    pidiendo aprobación. La persona solo da **Aprobar**.
+  - Si no se puede escribir en `~/.config/ghl-marketing`, los datos van a `.ghl-datos/` dentro de la carpeta (fuera
+    de git; las actualizaciones no la tocan).
+  - `AGENTS.md` trae la sección «Si eres Codex» y avisa que en Windows el comando es `python`.
+- `.agents/skills` ahora es una copia real (antes era un enlace simbólico, que en Windows no funciona con git).
+- La bitácora y la caché de versión ya no tumban un comando si no se pueden escribir.
+
 ## 1.3.0 — 10-nov-2026
 - **Se actualiza solo.** `python3 ghl.py actualizar` instala la última versión publicada en GitHub; `--revisar` solo
   avisa. Antes de instalar comprueba la huella (sha256) del archivo, respalda la versión anterior en

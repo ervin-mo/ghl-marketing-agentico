@@ -109,8 +109,10 @@ agente prepara por su cuenta queda en **borrador**, que no sale a ninguna red.
 ### ¿Es seguro?
 
 - El PIT se guarda en el **Llavero del sistema** (Mac y Linux), cifrado. En Windows queda en un archivo de tu carpeta
-  personal que solo tu usuario puede leer. **Nunca dentro de esta carpeta**, así que puedes actualizarla o
-  compartirla sin riesgo.
+  personal que solo tu usuario puede leer.
+- **Si usas Codex** (u otro agente que no deja escribir fuera de esta carpeta), tus subcuentas, PIT, perfil, fichas y
+  metas quedan en la subcarpeta **`.ghl-datos/`** dentro de esta carpeta, que solo tu usuario puede leer.
+  Las actualizaciones no la tocan, pero **si compartes la carpeta, borra antes `.ghl-datos/`**: ahí están tus PIT.
 - La herramienta **nunca muestra el PIT** ni los tokens de Facebook que GHL incluye en algunas respuestas.
 - Cada cambio queda anotado en `~/.config/ghl-marketing/bitacora.jsonl` (qué, cuándo, en qué subcuenta).
 - Si un PIT se filtra: GHL → Settings → Private Integrations → bórralo y crea otro; luego `conectar` de nuevo.

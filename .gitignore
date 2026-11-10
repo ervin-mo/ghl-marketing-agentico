@@ -10,3 +10,7 @@ __pycache__/
 informes/
 exportes/
 dist/
+
+# Datos locales cuando un agente en sandbox (Codex) no puede escribir en ~/.config: PIT, subcuentas, fichas, metas.
+.ghl-datos/
+.datos-prueba/

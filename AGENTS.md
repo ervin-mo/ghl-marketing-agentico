@@ -7,7 +7,7 @@ las cosas en lenguaje normal y no tiene que entrar a la pantalla de GHL.
 ## La herramienta
 
 `python3 ghl.py` en la raíz del repo. Python 3.9+ sin instalar nada. `python3 ghl.py ayuda` muestra todo.
-Las credenciales (el PIT de cada subcuenta) viven en `~/.config/ghl-marketing/`, fuera del repo.
+Las credenciales (el PIT de cada subcuenta) viven en `~/.config/ghl-marketing/`, fuera del repo; si el agente no puede escribir ahí (Codex), en `.ghl-datos/` dentro de esta carpeta (fuera de git). Ver «Si eres Codex».
 
 ## Antes de usar cualquier skill: ¿hay versión nueva?
 
@@ -65,6 +65,27 @@ Agente completo (tono, rutina, reglas): `.claude/agents/agente-marketing.md`. An
    informes, chats ni archivos. La herramienta solo da cifras y ligas a los chats.
 10. **Antes de escribir para un cliente, lee su ficha** (`python3 ghl.py ficha --cuenta X`). Si la revisión marca 🔴,
     se corrige; `--forzar` solo con el «sí» de la persona sabiendo el problema.
+
+## Si eres Codex (o cualquier agente con sandbox)
+
+`ghl.py` necesita **internet** (la API de GoHighLevel y GitHub para las actualizaciones). El modo normal de Codex
+(`workspace-write`) bloquea la red y no deja escribir fuera de esta carpeta. Ya está resuelto así:
+
+1. **Red:** esta carpeta trae `.codex/config.toml` con la red abierta solo para este proyecto. Codex lo lee si la
+   persona confió en la carpeta. Si al abrirla Codex preguntó «¿confías en este proyecto?», la respuesta es sí.
+2. **Datos:** si no se puede escribir en `~/.config/ghl-marketing`, la herramienta guarda subcuentas, PIT, perfil,
+   fichas y metas en `.ghl-datos/` dentro de esta carpeta (está fuera de git y las actualizaciones no la tocan).
+3. **Si aun así un comando dice «Sin internet en este entorno», «sin conexión» o `getaddrinfo failed`:**
+   - Vuelve a correr **el mismo comando** pidiendo permisos elevados (fuera del sandbox), con la justificación:
+     «ghl.py necesita internet para hablar con la API de GoHighLevel».
+   - Dile a la persona, en palabras simples: «Te va a aparecer una solicitud de aprobación: dale Aprobar. Si te ofrece
+     no volver a preguntar para comandos que empiecen con `python ghl.py`, elige esa opción».
+   - **No** le pidas que edite archivos de configuración ni que cambie Codex a «acceso completo»: con la aprobación
+     basta.
+4. Si un comando dice «No tengo permiso para guardar en…», haz lo mismo: repítelo con permisos elevados.
+
+**En Windows** el comando es `python`, no `python3` (si `python3` no existe o abre la Microsoft Store, usa `python`).
+Las rutas en los ejemplos usan `/`; en Windows también funcionan.
 
 ## Si eres Codex, OpenCode u otro agente sin «skills» nativas
 

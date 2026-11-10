@@ -5,7 +5,7 @@ description: Prepara a un cliente (subcuenta de GoHighLevel) para trabajarlo bie
 
 # Ficha de marca y metas de un cliente
 
-Las dos viven en tu computadora (`~/.config/ghl-marketing/clientes/<alias>/`), fuera del repo: actualizar el repo no
+Las dos viven en tu computadora (`~/.config/ghl-marketing/clientes/<alias>/`, o en `.ghl-datos/clientes/<alias>/` si usas Codex): actualizar el repo no
 las borra.
 
 ## Ficha de marca

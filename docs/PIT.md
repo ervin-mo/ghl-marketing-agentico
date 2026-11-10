@@ -62,7 +62,13 @@ subcuenta. Dónde queda el PIT:
 | **Linux** con `secret-tool` | Llavero del escritorio (GNOME/KDE) | `secret-tool lookup service ghl-marketing account <alias>` |
 | **Windows** u otro | `~/.config/ghl-marketing/cuentas.json`, solo tu usuario lo lee | Borrar la entrada con `cuentas --quitar` |
 
-**Nunca queda dentro del repo**, así que puedes compartir o actualizar la carpeta del repo sin riesgo.
+**Con Codex** (o cualquier agente que solo deja escribir dentro de la carpeta del proyecto) todo se guarda en
+`.ghl-datos/` dentro de esta carpeta. Está fuera de git y las actualizaciones no la tocan. **Si compartes la carpeta,
+bórrala antes**: ahí quedan tus PIT.
+
+**Si Codex dice «Sin internet en este entorno»:** cuando te pida aprobación para correr el comando, dale **Aprobar**.
+Si te ofrece no volver a preguntar para comandos que empiecen con `python ghl.py`, elígelo. No hace falta tocar
+ninguna configuración.
 
 Al terminar, `conectar` corre el diagnóstico solo (puedes repetirlo con `python3 ghl.py diagnostico`). Cada ✅ es algo que el agente ya puede hacer. Cada ❌ es un scope que falta (vuelve al paso de agregar permisos).
 🟡 = el permiso está, pero falta conectar algo en GHL (por ejemplo, Facebook en Ad Manager).
