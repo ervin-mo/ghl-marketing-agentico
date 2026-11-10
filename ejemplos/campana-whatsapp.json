@@ -1,0 +1,21 @@
+{
+  "campana": {"name": "Cliente · WhatsApp · Oferta · 17-nov-2026", "objective": "OUTCOME_ENGAGEMENT"},
+  "conjuntos": [{
+    "name": "Santiago 25-55",
+    "pageId": "<pageId: sale en  python3 ghl.py ads verificar>",
+    "budget": {"budgetType": "DAILY", "amount": 5000},
+    "audience": {
+      "geoLocations": [{"key": "<key de  ads buscar --tipo geolocation --texto Santiago>", "name": "Santiago",
+                        "type": "city", "selectionType": "include", "radius": 15, "radiusUnit": "km"}],
+      "ageMin": 25, "ageMax": 55, "placementType": "auto"
+    },
+    "messagingPlatforms": ["WHATSAPP"],
+    "anuncios": [
+      {"name": "Imagen 1", "cta": "MESSAGE_PAGE",
+       "primaryTexts": ["Texto principal A", "Texto principal B"], "headlines": ["Titular A", "Titular B"],
+       "media": [{"archivo": "creativo-1080x1350.jpg"}]},
+      {"name": "Reel 1", "cta": "MESSAGE_PAGE", "primaryTexts": ["Texto del reel"], "headlines": ["Titular"],
+       "media": [{"archivo": "reel.mp4", "miniatura": "portada.jpg"}]}
+    ]
+  }]
+}

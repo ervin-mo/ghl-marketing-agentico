@@ -1,0 +1,19 @@
+{
+  "campana": {"name": "Cliente · Tráfico · Catálogo · 17-nov-2026", "objective": "OUTCOME_TRAFFIC"},
+  "conjuntos": [{
+    "name": "Chile 25-55",
+    "pageId": "<pageId>",
+    "budget": {"budgetType": "DAILY", "amount": 4000},
+    "audience": {"geoLocations": [{"key": "CL", "name": "Chile", "type": "country", "selectionType": "include"}],
+                 "ageMin": 25, "ageMax": 55, "placementType": "auto"},
+    "anuncios": [{
+      "name": "Carrusel catálogo", "mediaType": "CAROUSEL", "cta": "SHOP_NOW",
+      "primaryTexts": ["Mira el catálogo completo"], "headlines": ["Catálogo"],
+      "destinationLink": "https://tusitio.cl",
+      "media": [
+        {"archivo": "tarjeta1.jpg", "link": "https://tusitio.cl/a", "headline": "Producto A", "description": "Desde $9.990"},
+        {"archivo": "tarjeta2.jpg", "link": "https://tusitio.cl/b", "headline": "Producto B", "description": "Desde $12.990"}
+      ]
+    }]
+  }]
+}

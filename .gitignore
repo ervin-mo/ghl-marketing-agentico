@@ -1,0 +1,12 @@
+# Credenciales: NUNCA al repo. Viven en ~/.config/ghl-marketing/ (fuera de esta carpeta).
+.env
+.env.*
+cuentas.json
+bitacora.jsonl
+campanas/
+*.pit
+__pycache__/
+.DS_Store
+informes/
+exportes/
+dist/

@@ -1,0 +1,11 @@
+{
+  "posts": [
+    {"redes": "fb,ig", "formato": "post", "texto": "Primer post de la semana ✨\nSegunda línea del copy.",
+     "media": ["foto1.jpg"], "cuando": "2026-11-17 10:00", "primer_comentario": "#hashtag1 #hashtag2"},
+    {"redes": "ig", "formato": "post", "texto": "Carrusel: el orden de las imágenes es el orden de la lista.",
+     "media": ["lamina1.png", "lamina2.png", "lamina3.png"], "cuando": "2026-11-19 18:30"},
+    {"redes": "ig,fb", "formato": "reel", "texto": "Reel vertical 9:16, de 3 a 90 s.",
+     "media": ["reel.mp4"], "cuando": "2026-11-21 12:00"},
+    {"redes": "ig", "formato": "story", "media": ["historia.jpg"]}
+  ]
+}
