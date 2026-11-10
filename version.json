@@ -1,7 +1,7 @@
 {
- "version": "1.3.1",
+ "version": "1.3.2",
  "publicada": "2026-11-10",
- "zip": "https://github.com/ervin-mo/ghl-marketing-agentico/releases/download/v1.3.1/ghl-marketing-agentico-1.3.1.zip",
- "sha256": "2732e5a23eac70bb4c5cbd3193caa27f1e7a2bfb7fb63da77107622f426ebf2e",
- "notas": "- **Funciona en Codex, también en Windows.** El sandbox normal de Codex bloquea internet y no deja escribir fuera de la\n  carpeta del proyecto; por eso `ghl.py` fallaba con `getaddrinfo failed`.\n  - La carpeta trae `.codex/config.toml`, que abre la red solo para este proyecto. Codex lo lee si confías en la carpeta.\n  - Si el agente aun así no tiene red, la herramienta se lo dice con un mensaje claro: que vuelva a correr el comando\n    pidiendo aprobación. La persona solo da **Aprobar**.\n  - Si no se puede escribir en `~/.config/ghl-marketing`, los datos van a `.ghl-datos/` dentro de la carpeta (fuera\n    de git; las actualizaciones no la tocan).\n  - `AGENTS.md` trae la sección «Si eres Codex» y avisa que en Windows el comando es `python`.\n- `.agents/skills` ahora es una copia real (antes era un enlace simbólico, que en Windows no funciona con git).\n- La bitácora y la caché de versión ya no tumban un comando si no se pueden escribir."
+ "zip": "https://github.com/ervin-mo/ghl-marketing-agentico/releases/download/v1.3.2/ghl-marketing-agentico-1.3.2.zip",
+ "sha256": "34bca4aca7d3dcb52837effc9108acfbf6879545703e635a3143af7b9a099933",
+ "notas": "- Cada skill trae la sección «Si no tienes internet o no puedes guardar» con la ruta probada para agentes con\n  sandbox (Codex en Windows y Mac): repetir el comando pidiendo aprobación, y la persona solo da **Aprobar**. Así,\n  cualquier agente que abra una sola skill encuentra el arreglo sin tener que leer `AGENTS.md`."
 }
