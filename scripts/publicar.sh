@@ -32,4 +32,4 @@ PY
 git add version.json
 git commit -q -m "Publica v$V"
 git push origin main
-echo "✅ v$V publicada. Las instalaciones la verán en su próxima revisión (máximo 24 h, o al momento con: ghl.py actualizar)."
+echo "✅ v$V publicada. Las instalaciones la verán en su próxima revisión (máximo 24 h; GitHub tarda hasta 5 min en mostrar version.json nuevo)."
