@@ -16,7 +16,7 @@ import argparse, csv, datetime as dt, getpass, hashlib, json, mimetypes, os, re,
     time, uuid
 import urllib.error, urllib.parse, urllib.request
 
-VERSION = "1.3.1"
+VERSION = "1.3.2"
 BASE = "https://services.leadconnectorhq.com"
 ADP = BASE + "/ad-publishing/facebook"
 V_SOCIAL = "2021-07-28"      # Social Planner, medios, blogs, correos, enlaces, usuarios, subcuenta

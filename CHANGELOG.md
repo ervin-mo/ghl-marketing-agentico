@@ -1,5 +1,10 @@
 # Cambios
 
+## 1.3.2 — 10-nov-2026
+- Cada skill trae la sección «Si no tienes internet o no puedes guardar» con la ruta probada para agentes con
+  sandbox (Codex en Windows y Mac): repetir el comando pidiendo aprobación, y la persona solo da **Aprobar**. Así,
+  cualquier agente que abra una sola skill encuentra el arreglo sin tener que leer `AGENTS.md`.
+
 ## 1.3.1 — 10-nov-2026
 - **Funciona en Codex, también en Windows.** El sandbox normal de Codex bloquea internet y no deja escribir fuera de la
   carpeta del proyecto; por eso `ghl.py` fallaba con `getaddrinfo failed`.

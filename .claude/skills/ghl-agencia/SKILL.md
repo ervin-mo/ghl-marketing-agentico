@@ -66,3 +66,22 @@ conectadas; con `--cuentas a,b` solo esas. Rango: `--dias N` (últimos N días c
 - El resumen compara contra el periodo **inmediatamente anterior de igual largo**.
 - «Interacción» = likes + 2×comentarios + 3×compartidos de los posts del periodo; GHL no entrega alcance por post.
 - Un cliente con ⚠️ (error) no se analizó: dilo, no lo des por «sin novedades».
+
+
+## Si no tienes internet o no puedes guardar (Codex y otros agentes con sandbox)
+
+Probado con Codex en Windows y en Mac (10-nov-2026). Síntomas: `getaddrinfo failed`, `Sin internet en este entorno`,
+`sin conexión`, `HTTP 0` o `No tengo permiso para guardar en…`, aunque la computadora sí tenga internet.
+
+1. **No es la herramienta ni el internet de la persona**: es tu sandbox, que bloquea la red o la escritura fuera de
+   esta carpeta.
+2. **Vuelve a correr el MISMO comando pidiendo permisos elevados** (fuera del sandbox), con la justificación
+   «ghl.py necesita internet para hablar con la API de GoHighLevel».
+3. Dile a la persona, en palabras simples: «Te va a aparecer una solicitud de aprobación: dale **Aprobar**. Si te
+   ofrece no volver a preguntar para comandos que empiecen con `python ghl.py`, elige esa opción».
+4. **No** le pidas que edite archivos de configuración ni que cambie el agente a «acceso completo».
+5. En Windows el comando es `python`, no `python3`.
+
+La carpeta ya trae `.codex/config.toml`, que abre la red para este proyecto si la persona confió en la carpeta. Si no
+se puede escribir en `~/.config/ghl-marketing`, los datos se guardan solos en `.ghl-datos/` dentro de la carpeta.
+Detalle en `AGENTS.md`, sección «Si eres Codex».
